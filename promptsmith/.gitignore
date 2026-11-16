@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-.env
-.ipynb_checkpoints/
-models/
-results/outputs/*.png
-flagged/
-.gradio/
-.streamlit/secrets.toml

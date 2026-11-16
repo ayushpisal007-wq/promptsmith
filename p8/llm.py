@@ -31,7 +31,7 @@ def model_name() -> str:
     if b == "hf_api":
         return os.getenv("HF_API_MODEL", "Qwen/Qwen2.5-7B-Instruct")
     if b == "openai":
-        return os.getenv("OPENAI_MODEL", "llama-3.1-8b-instant")
+        return os.getenv("OPENAI_MODEL", "openai/gpt-oss-20b")
     return "mock"
 
 
@@ -80,14 +80,14 @@ def _chat_openai(messages, max_new_tokens, temperature):
     import requests
 
     base = os.getenv("OPENAI_BASE_URL", "https://api.groq.com/openai/v1").rstrip("/")
-    r = requests.post(
-        f"{base}/chat/completions",
-        headers={"Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}"},
-        json={"model": model_name(), "messages": messages, "max_tokens": max_new_tokens, "temperature": temperature},
-        timeout=60,
-    )
-    r.raise_for_status()
-    return r.json()["choices"][0]["message"]["content"].strip()
+    body = {"model": model_name(), "messages": messages, "max_tokens": max_new_tokens, "temperature": temperature}
+    if "gpt-oss" in model_name():  # reasoning model: keep thinking short and leave room for the answer
+        body.update(reasoning_effort="low", max_tokens=max_new_tokens + 768)
+    r = requests.post(f"{base}/chat/completions",
+                      headers={"Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}"}, json=body, timeout=90)
+    if r.status_code >= 400:
+        raise RuntimeError(f"LLM API error {r.status_code}: {r.text[:300]}")
+    return (r.json()["choices"][0]["message"].get("content") or "").strip()
 
 
 def _chat_mock(messages, max_new_tokens, temperature):

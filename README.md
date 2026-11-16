@@ -18,7 +18,7 @@ short_description: Grade a prompt on a rubric, rewrite it, compare outputs
 
 The app scores a student's prompt on a five-part rubric (**role, context, task, format, constraints**), rewrites it, and shows the output of the original and the rewritten prompt side by side, for both **text** and **image** prompts.
 
-- 🔗 **Live app:** https://huggingface.co/spaces/ayushpisal/promptsmith
+- 🔗 **Live app (Streamlit Community Cloud):** https://<your-app-name>.streamlit.app
 - 🔗 **Fine-tuned BERT:** https://huggingface.co/ayushpisal/p8-bert-prompt-quality
 
 ![block diagram](docs/block_diagram.png)
@@ -36,41 +36,38 @@ The app scores a student's prompt on a five-part rubric (**role, context, task, 
 ## Run it
 
 ```bash
-pip install -r requirements.txt gradio==6.32.0
-python app.py                       # http://localhost:7860
-LLM_BACKEND=mock pytest -q tests    # fast tests, no model downloads
+pip install -r requirements.txt
+streamlit run streamlit_app.py          # main app (http://localhost:8501)
+LLM_BACKEND=mock pytest -q tests        # fast tests, no model downloads
 ```
+`app.py` is an equivalent Gradio UI for GPU hosts (it needs `gradio`, `diffusers` and `accelerate` too).
 
 ### Train BERT and produce the results (Google Colab, free T4 GPU)
-Open `notebooks/P8_train_and_evaluate.ipynb` in Colab and choose **Runtime → Run all**. It:
-1. fine-tunes `bert-base-uncased` on 3,000 synthetic rubric-labelled prompts (`python train_bert.py`, about 3 min)
-2. runs `python evaluate.py`, which writes every table to `results/` (`summary.md` is ready to paste into the report)
-3. pushes the model to the Hugging Face Hub so the Space can load it
+Open `notebooks/P8_train_and_evaluate.ipynb` in Colab and choose **Runtime → Run all**. It fine-tunes `bert-base-uncased` (about 2 min), runs `evaluate.py` with Qwen2.5-1.5B and sd-turbo on the GPU (writing every table to `results/`), and pushes the model to the Hugging Face Hub.
 
-## Deploy on Hugging Face Spaces (free CPU)
-1. Create a Space: SDK **Gradio**, hardware **CPU basic (free)**.
-2. Upload every file in this repo except `models/` (or `git push` to the Space).
-3. Under **Settings → Variables and secrets**, add the variable `BERT_MODEL = ayushpisal/p8-bert-prompt-quality`.
-4. Optional variables:
-   - `LLM_MODEL=Qwen/Qwen2.5-0.5B-Instruct` for faster but weaker answers
-   - `RUN_MAX_TOKENS=150` for shorter outputs
-   - `LLM_BACKEND=hf_api` plus a **secret** `HF_TOKEN` to use hosted inference, which is much faster on CPU
+## Deploy on Streamlit Community Cloud (free)
+1. Go to share.streamlit.io, sign in with GitHub, then **Create app → Deploy a public app from GitHub**.
+2. Repo `ayushpisal007-wq/promptsmith`, branch `main`, main file `streamlit_app.py`.
+3. **Advanced settings:** Python 3.12. Under **Secrets**, add `GROQ_API_KEY = "gsk_..."` (a free key from console.groq.com).
+4. Click **Deploy**.
 
-No API key is needed by default. Any key goes in Space **secrets**, never in the code.
+The free host has only about 1-2.7 GB of RAM, so the deployed app calls Groq (`openai/gpt-oss-20b`) for the LLM and Pollinations (FLUX) for images. The fine-tuned BERT (`ayushpisal/p8-bert-prompt-quality`) and CLIP run inside the app with PyTorch, in bfloat16 to save memory. No key is ever stored in the repo.
 
 ## Configuration
 
 | Variable | Default | Meaning |
 |---|---|---|
+| `GROQ_API_KEY` | - | Streamlit secret; switches the LLM to Groq |
 | `LLM_BACKEND` | `local` | `local` (transformers), `hf_api`, `openai` (any OpenAI-compatible API, e.g. Groq), `mock` (tests) |
 | `LLM_MODEL` | `Qwen/Qwen2.5-1.5B-Instruct` | local judge, rewriter and runner |
 | `BERT_MODEL` | `models/bert-prompt-quality` | local folder or Hub repo id |
-| `IMAGE_BACKEND` / `IMAGE_MODEL` | `local` / `stabilityai/sd-turbo` | text-to-image |
+| `IMAGE_BACKEND` | `pollinations` on Streamlit, `local` (sd-turbo) elsewhere | text-to-image |
+| `LOW_MEMORY` | `1` on Streamlit | load BERT and CLIP in bfloat16 |
 | `CLIP_MODEL` | `openai/clip-vit-base-patch32` | CLIP score |
 
 ## Repo layout
 ```
-app.py              Gradio UI
+streamlit_app.py    Streamlit UI (deployed)      app.py  Gradio UI
 p8/rubric.py        U1 rubric + rule scorer      p8/judge.py       U2 judge + rewriter
 p8/classifier.py    U3 BERT + attention          p8/clip_score.py  U3 CLIP score
 p8/imagegen.py      U4 sd-turbo                  p8/safety.py      U5 PII + bias checks

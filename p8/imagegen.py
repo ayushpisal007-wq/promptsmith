@@ -1,17 +1,23 @@
 """U4 - Text-to-image generation so original and rewritten image prompts can be compared.
 
-IMAGE_BACKEND=local (default): stabilityai/sd-turbo with diffusers + PyTorch, 1 step, 512x512 (works on CPU).
-IMAGE_BACKEND=hf_api: Hugging Face Inference Providers text_to_image (needs HF_TOKEN).
-The same seed is used for both prompts so only the wording differs.
+IMAGE_BACKEND (the same seed is used for both prompts, so only the wording differs):
+  pollinations - free hosted FLUX via image.pollinations.ai, no key (default for the Streamlit deployment)
+  hf_api       - Hugging Face Inference Providers text_to_image (needs HF_TOKEN)
+  local        - stabilityai/sd-turbo with diffusers + PyTorch, 1 step (used for the Colab evaluation)
 """
 from __future__ import annotations
 
+import io
 import os
 import threading
 import time
 
 _lock = threading.Lock()
 _cache = {}
+
+
+def backend() -> str:
+    return os.getenv("IMAGE_BACKEND", "local").lower()
 
 
 def _pipe():
@@ -28,15 +34,36 @@ def _pipe():
     return _cache["pipe"]
 
 
+def _pollinations(prompt, seed, size):
+    import requests
+    from urllib.parse import quote
+    from PIL import Image
+
+    url = f"https://image.pollinations.ai/prompt/{quote(prompt)}"
+    params = {"width": size, "height": size, "seed": seed, "nologo": "true",
+              "model": os.getenv("POLLINATIONS_MODEL", "flux")}
+    for attempt in range(4):  # anonymous tier allows about one request per 15 s
+        r = requests.get(url, params=params, timeout=180)
+        if r.status_code == 429 or r.status_code >= 500:
+            time.sleep(16)
+            continue
+        r.raise_for_status()
+        return Image.open(io.BytesIO(r.content)).convert("RGB")
+    raise RuntimeError(f"image service busy (HTTP {r.status_code}); try again in a minute")
+
+
 def generate(prompt: str, seed: int = 42, size: int = 512):
     """Return (PIL.Image, latency_seconds)."""
     t0 = time.perf_counter()
     with _lock:
-        if os.getenv("IMAGE_BACKEND", "local") == "hf_api":
+        b = backend()
+        if b == "pollinations":
+            img = _pollinations(prompt, seed, size)
+        elif b == "hf_api":
             from huggingface_hub import InferenceClient
 
             client = InferenceClient(token=os.environ["HF_TOKEN"])
-            img = client.text_to_image(prompt, model=os.getenv("HF_IMAGE_MODEL", "stabilityai/stable-diffusion-xl-base-1.0"),
+            img = client.text_to_image(prompt, model=os.getenv("HF_IMAGE_MODEL", "black-forest-labs/FLUX.1-schnell"),
                                        seed=seed, width=size, height=size)
         else:
             import torch

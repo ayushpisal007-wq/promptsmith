@@ -29,7 +29,8 @@ def _load():
     p = model_path()
     tok = AutoTokenizer.from_pretrained(p)
     # eager attention so the attention weights can be returned for the explanation view
-    model = AutoModelForSequenceClassification.from_pretrained(p, attn_implementation="eager").eval()
+    dtype = torch.bfloat16 if os.getenv("LOW_MEMORY") == "1" else torch.float32  # half the RAM on small hosts
+    model = AutoModelForSequenceClassification.from_pretrained(p, attn_implementation="eager", dtype=dtype).eval()
     torch.set_grad_enabled(False)
     _cache.update(tok=tok, model=model)
     return tok, model
@@ -42,11 +43,11 @@ def predict(prompt: str) -> dict:
     tok, model = _load()
     enc = tok(prompt, return_tensors="pt", truncation=True, max_length=128)
     out = model(**enc, output_attentions=True)
-    probs = torch.softmax(out.logits[0], -1).tolist()
+    probs = torch.softmax(out.logits[0].float(), -1).tolist()
     id2label = model.config.id2label
     probs = {id2label.get(i, id2label.get(str(i), LABELS[i])): float(p) for i, p in enumerate(probs)}
 
-    att = out.attentions[-1][0].mean(0)[0]  # [seq] attention from CLS
+    att = out.attentions[-1][0].float().mean(0)[0]  # [seq] attention from CLS
     tokens = tok.convert_ids_to_tokens(enc["input_ids"][0])
     words, weights = [], []
     for t, w in zip(tokens, att.tolist()):

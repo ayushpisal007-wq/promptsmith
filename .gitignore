@@ -6,3 +6,4 @@ models/
 results/outputs/*.png
 flagged/
 .gradio/
+.streamlit/secrets.toml

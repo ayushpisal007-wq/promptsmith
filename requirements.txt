@@ -1,14 +1,10 @@
-# Gradio itself is installed by Hugging Face Spaces from sdk_version in README.md.
-# For local runs also install:  pip install gradio==6.32.0
-torch==2.15.0
+# Streamlit Community Cloud (CPU only). The Colab notebook installs its own extras (diffusers etc.).
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
 transformers==5.23.0
-diffusers==0.43.0
-accelerate>=1.0
 huggingface_hub>=1.0
 safetensors
+streamlit>=1.40
 pandas
-scikit-learn
-matplotlib
-tabulate
 requests
 Pillow
