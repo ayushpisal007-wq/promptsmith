@@ -21,10 +21,14 @@
 ## Evaluation
 | Test set | Accuracy | Macro-F1 |
 |---|---|---|
-| Synthetic test split (300) | *fill from results/bert_metrics.json* | |
-| 30 hand-labelled gold prompts (out-of-distribution) | *fill* | |
+| Synthetic test split (300) | 0.940 | 0.940 |
+| 30 hand-labelled gold prompts (out-of-distribution) | 0.800 | 0.709 |
 
-The other graders on the same 30 gold prompts (rule-based, zero-shot judge, few-shot judge) are compared in `results/judge_comparison.csv`.
+Trained in 113 s on a T4 GPU; validation accuracy 0.890 → 0.903 → 0.933 over the 3 epochs. On the gold set, 4 of 6 *average* prompts were predicted *weak*.
+
+Band accuracy of the other graders on the same 30 gold prompts: rule-based 0.867, few-shot LLM judge 0.633, zero-shot LLM judge 0.400 (`results/judge_comparison.csv`).
+
+**Counterfactual bias test:** across 10 name/gender-swapped pairs, BERT's P(strong) changed by 0.000 and the rule scores did not change. The LLM judge changed in 3 of 10 pairs, by up to 3 points.
 
 ## Limitations and failure modes
 - **Synthetic-template bias:** the model learns phrasing patterns from the generator (e.g. "You are a…", "Use bullet points"). Unusual but good prompts can be under-rated, and keyword-stuffed prompts over-rated.

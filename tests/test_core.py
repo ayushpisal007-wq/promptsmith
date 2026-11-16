@@ -61,3 +61,10 @@ def test_pipeline_with_mock_llm():
     r = analyze("write a job ad for a salesman, contact a@b.com", "text")
     assert "a@b.com" not in r["clean"] and r["safety"]["bias"]
     assert r["after"]["rule_total"] >= r["before"]["rule_total"]
+
+
+def test_age_range_and_clean_prefix():
+    from p8.judge import _clean
+    assert find_bias("targeting individuals aged between 25-35 years old")
+    assert find_bias("appeals to young professionals")
+    assert _clean("Strong prompt:\nYou are a teacher.") == "You are a teacher."

@@ -79,10 +79,11 @@ def judge(prompt: str, kind: str = "text", few_shot: bool = True) -> dict:
 # ---------------------------------------------------------------- rewriter
 REWRITE_TEXT = (
     "You rewrite weak prompts into strong prompts for a chat LLM. Keep the user's original intent. "
+    "Start the rewritten prompt with 'You are' followed by a specific role. "
     "The rewritten prompt must contain: (1) a specific role for the model, (2) context - who it is for and why, "
     "(3) a precise task with scope, (4) the output format and structure, (5) constraints such as length, tone and "
     "what to avoid. If a detail is unknown, state a sensible generic assumption (e.g. 'Assume the reader is a "
-    "beginner') - never invent names, numbers, contact details or personal facts. Replace biased wording with "
+    "beginner') - never invent names, numbers, contact details, reasons or personal facts (e.g. do not invent why someone needs leave). Never add requirements about age, gender, nationality, religion or appearance. Replace biased wording with "
     "neutral, inclusive wording and keep redaction tags such as [EMAIL] or [PHONE] exactly as they are. "
     "Reply with only the rewritten prompt, written to the model in second person, under 120 words."
 )
@@ -96,7 +97,7 @@ REWRITE_IMAGE = (
 
 def _clean(text: str) -> str:
     text = re.sub(r"^```\w*|```$", "", text.strip()).strip()
-    text = re.sub(r"^(?:\*\*)?(?:rewritten|improved|new) prompt(?:\*\*)?\s*:\s*", "", text, flags=re.I)
+    text = re.sub(r"^(?:\*\*)?[\w ]{0,25}prompt(?:\*\*)?\s*:\s*", "", text, flags=re.I)
     return text.strip().strip('"').strip()
 
 

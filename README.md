@@ -18,8 +18,8 @@ short_description: Grade a prompt on a rubric, rewrite it, compare outputs
 
 The app scores a student's prompt on a five-part rubric (**role, context, task, format, constraints**), rewrites it, and shows the output of the original and the rewritten prompt side by side, for both **text** and **image** prompts.
 
-- 🔗 **Live app:** `https://huggingface.co/spaces/<your-hf-username>/p8-prompt-grader`
-- 🔗 **Fine-tuned BERT:** `https://huggingface.co/<your-hf-username>/p8-bert-prompt-quality`
+- 🔗 **Live app:** https://huggingface.co/spaces/ayushpisal/promptsmith
+- 🔗 **Fine-tuned BERT:** https://huggingface.co/ayushpisal/p8-bert-prompt-quality
 
 ![block diagram](docs/block_diagram.png)
 
@@ -50,7 +50,7 @@ Open `notebooks/P8_train_and_evaluate.ipynb` in Colab and choose **Runtime → R
 ## Deploy on Hugging Face Spaces (free CPU)
 1. Create a Space: SDK **Gradio**, hardware **CPU basic (free)**.
 2. Upload every file in this repo except `models/` (or `git push` to the Space).
-3. Under **Settings → Variables and secrets**, add the variable `BERT_MODEL = <your-hf-username>/p8-bert-prompt-quality`.
+3. Under **Settings → Variables and secrets**, add the variable `BERT_MODEL = ayushpisal/p8-bert-prompt-quality`.
 4. Optional variables:
    - `LLM_MODEL=Qwen/Qwen2.5-0.5B-Instruct` for faster but weaker answers
    - `RUN_MAX_TOKENS=150` for shorter outputs
@@ -79,6 +79,17 @@ train_bert.py       fine-tuning                  evaluate.py       all measured 
 data/               gold (30), weak (5), safety (38) and counterfactual (10) sets
 MODEL_CARD.md       model card                   docs/             diagrams
 ```
+
+## Results (Colab T4 run, 16 Nov 2026)
+| | |
+|---|---|
+| BERT accuracy: synthetic test / hand-labelled gold | 0.940 / 0.800 |
+| LLM-judge MAE vs gold: zero-shot → few-shot | 2.80 → 1.47 |
+| 5 weak prompts: mean rule score before → after | 1.8 → 5.2 /10 |
+| 5 weak prompts: mean LLM-judge score before → after | 2.0 → 9.0 /10 |
+| PII / bias detector recall (precision 1.0 for both) | 0.846 / 0.867 |
+
+Full tables: `results/summary.md`.
 
 ## Limitations (summary)
 The BERT classifier is trained on synthetic, template-built prompts, so it can over-reward keywords. The rule scorer is keyword-based. The 1.5B judge can be inconsistent, and sd-turbo at 1 step gives modest image quality. See `MODEL_CARD.md` and the report for the measured failure cases.

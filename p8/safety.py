@@ -80,6 +80,8 @@ BIAS_LEXICON = [
     (r"\b(?:young(?: and|,)? (?:energetic|dynamic|fresh)|youthful|digital natives?)\b", "age", "describe the skill needed (e.g. 'motivated', 'comfortable with digital tools')"),
     (r"\b(?:recent graduates? only|under \d{2}|below \d{2} years|max(?:imum)? age)\b", "age", "remove age limits unless legally required"),
     (r"\b(?:boomers?|old people|oldies|senile)\b", "age", "older adults"),
+    (r"\b(?:aged?|age group|age range)\s*(?:between|of|from)?\s*\d{2}\s*(?:-|–|to|and)\s*\d{2}\b|\b\d{2}\s*(?:-|–|to)\s*\d{2}\s*(?:years?|yrs)(?: old)?\b", "age", "remove the age range; describe the experience or skills needed"),
+    (r"\byoung (?:professionals?|candidates?|people|talent)\b", "age", "early-career professionals, or describe the skills needed"),
     (r"\bnative (?:english )?speakers?\b", "nationality/language", "fluent in English"),
     (r"\b(?:fair[- ]skinned|fair complexion|good looking|attractive)\b", "appearance", "remove appearance requirements"),
     (r"\b(?:able[- ]bodied)\b", "disability", "state the actual physical requirement"),
