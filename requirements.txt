@@ -1,0 +1,14 @@
+# Gradio itself is installed by Hugging Face Spaces from sdk_version in README.md.
+# For local runs also install:  pip install gradio==6.32.0
+torch==2.15.0
+transformers==5.23.0
+diffusers==0.43.0
+accelerate>=1.0
+huggingface_hub>=1.0
+safetensors
+pandas
+scikit-learn
+matplotlib
+tabulate
+requests
+Pillow

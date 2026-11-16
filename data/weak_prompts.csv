@@ -1,0 +1,6 @@
+id,kind,prompt
+W1,text,"explain machine learning"
+W2,text,"write email to boss about leave"
+W3,text,"write a job ad for a young energetic salesman, applicants can contact rahul.k@gmail.com or 9876543210"
+W4,image,"a cat"
+W5,image,"city at night"
