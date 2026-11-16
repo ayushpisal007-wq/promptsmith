@@ -1,0 +1,31 @@
+id,kind,prompt,gold_band,bert_pred,bert_p_strong
+G01,text,explain machine learning,weak,weak,0.006
+G02,text,write email to boss about leave,weak,weak,0.005
+G03,text,help me with my resume,weak,weak,0.007
+G04,text,python sorting code,weak,weak,0.006
+G05,text,What is blockchain?,weak,weak,0.005
+G06,text,You are an expert. Explain photosynthesis.,weak,weak,0.003
+G07,text,Summarize the French Revolution in 5 bullet points for my history exam.,average,weak,0.002
+G08,text,Write a LinkedIn post about my internship. Keep it professional and under 150 words.,average,weak,0.002
+G09,text,"Act as a senior data scientist. I'm presenting to non-technical managers tomorrow who must decide on funding. Explain what a confusion matrix shows, using one hospital example and covering precision and recall. Give 3 short sections with headings. Avoid formulas and keep it under 250 words.",strong,strong,0.991
+G10,text,"You are a career coach for fresh graduates. I'm a final-year CSE student applying for frontend internships at startups. Write a cover letter that highlights my React project and one measurable achievement. Format it as a 4-paragraph email with a subject line. Keep it under 200 words, confident but not arrogant, and do not invent experience I don't have.",strong,strong,0.991
+G11,text,give me a diet plan,weak,weak,0.007
+G12,text,Make a 7-day study timetable for my GATE exam prep.,average,weak,0.004
+G13,text,Translate this to Hindi: 'The meeting is postponed to Friday.',weak,weak,0.003
+G14,text,You are a friendly primary-school science teacher. Explain the water cycle to 9-year-olds using a story about a raindrop. Use 4 short paragraphs and end with 2 quiz questions. Use simple words only.,strong,strong,0.977
+G15,text,write a story,weak,weak,0.005
+G16,text,"As a marketing expert, write an Instagram caption for our streetwear brand's new hoodie drop. Our buyers are college students in Pune and we want pre-orders. Include a call to action and 3 hashtags, max 40 words, no cringe slang.",strong,strong,0.935
+G17,text,Debug this code,weak,weak,0.008
+G18,text,"Compare SQL and NoSQL databases in a table with columns for scalability, schema and use cases.",average,weak,0.002
+G19,text,I have a job interview at TCS next week. What should I say when they ask about my weaknesses?,weak,weak,0.004
+G20,text,You are a strict code reviewer. Review my function for bugs.,weak,weak,0.002
+G21,text,"Write a 300-word blog post on time management for college students, in a casual tone, with 3 subheadings and no clichés.",average,average,0.005
+G22,text,"Plan a 3-day Goa trip for 4 friends with a 12,000 rupee budget. Give a day-wise table with places, food and costs. Avoid expensive clubs.",strong,average,0.005
+G23,image,a cat,weak,weak,0.006
+G24,image,city at night,weak,weak,0.006
+G25,image,"a dog in a park, photo",weak,weak,0.003
+G26,image,"cinematic photograph of a red fox sitting on a mossy log in a misty forest at sunrise, soft golden light, close-up, 85mm, shallow depth of field, no text, muted earth tones",strong,strong,0.99
+G27,image,anime girl,weak,weak,0.003
+G28,image,"watercolour painting of an old Pune wada courtyard with a tulsi plant, morning light, wide shot",average,average,0.007
+G29,image,logo for my clothing brand,weak,weak,0.004
+G30,image,"Product photo of a black oversized hoodie on a white background, studio lighting, front view, square format, no logos, no people",strong,average,0.044

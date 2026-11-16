@@ -1,0 +1,5 @@
+grader,MAE total (/10),band accuracy,Pearson r,parse rate,mean latency s
+Rule-based rubric (U1),0.67,0.867,0.961,1.0,0.0
+"LLM judge, zero-shot (U2)",2.8,0.4,0.61,1.0,3.97
+"LLM judge, few-shot (U2)",1.47,0.633,0.795,1.0,1.66
+BERT classifier (U3),-,0.8,-,1.0,-

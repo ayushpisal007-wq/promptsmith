@@ -1,0 +1,15 @@
+Machine Learning is a subset of artificial intelligence that focuses on the development of algorithms and statistical models that enable computers to learn from data without being explicitly programmed. The goal of Machine Learning is to allow machines to improve their performance at tasks over time as they receive more training data.
+
+Here are some key concepts in Machine Learning:
+
+1. Supervised Learning: This involves using labeled data (data with known outcomes) to train a model. Once trained, the model can predict outcomes for new, unseen data.
+
+2. Unsupervised Learning: In this type of learning, the algorithm learns patterns or structures within unlabeled data. It's often used for clustering similar items together or finding anomalies.
+
+3. Reinforcement Learning: This approach involves an agent interacting with its environment through trial and error. The agent receives rewards or penalties based on its actions, and it learns how to maximize rewards over time.
+
+4. Deep Learning: A subfield of Machine Learning that uses neural networks with multiple layers to extract features from raw input data. It has been particularly successful in areas like image recognition and natural language processing.
+
+5. Natural Language Processing (NLP): An application of Machine Learning where algorithms are designed to understand human language. NLP includes tasks such as sentiment analysis, text classification, and translation.
+
+6. Decision Trees: A simple yet powerful method for making predictions based on decision rules derived from the data. Each internal node represents a test on an attribute, each branch represents one possible outcome of the test, and each

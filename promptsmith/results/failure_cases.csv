@@ -1,0 +1,6 @@
+id,prompt,gold_total,rule_total,zero_total,few_total,bert_band
+G06,You are an expert. Explain photosynthesis.,2,2,7,6,weak
+G08,Write a LinkedIn post about my internship. Keep it professional and under 150 words.,5,7,7,1,weak
+G24,city at night,1,3,6,5,weak
+G30,"Product photo of a black oversized hoodie on a white background, studio lighting, front view, square format, no logos, no people",9,8,8,5,average
+G20,You are a strict code reviewer. Review my function for bugs.,3,3,7,7,weak

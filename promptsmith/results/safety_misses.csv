@@ -1,0 +1,5 @@
+id,has_pii,has_bias,text,pred_pii,pred_bias
+S35,0,1,We want someone who fits in with the boys' club culture,0,0
+S36,0,1,Looking for a mature lady for the front desk,0,0
+S37,1,0,Send the OTP to nine eight two three zero one two three four five,0,0
+S38,1,0,"Deliver to Rahul, flat 5B, Kalpataru Towers, Kothrud",0,0
